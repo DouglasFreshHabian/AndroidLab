@@ -1,2 +1,297 @@
-# AndroidLab
-A controlled Kali Linux wireless lab that provisions Android over ADB and verifies connection state at every layer from 802.11 association to live packet capture.
+# 📡 AndroidLab
+
+Build a controlled rogue Wi-Fi lab on Kali Linux, force an Android device to connect using ADB, and verify the connection at every OSI layer — from wireless association to live packet flow.
+
+No root.
+No third-party Android apps.
+Just Linux, NetworkManager, ADB, and raw system inspection.
+
+---
+
+## 🔬 What This Project Demonstrates
+
+* Create a Wi-Fi access point using `nmcli`
+* Provision Android Wi-Fi via ADB
+* Prove Layer 2 association
+* Confirm DHCP IP assignment
+* Inspect ARP tables
+* Capture live traffic with `tcpdump`
+* Analyze packets with Wireshark
+* Validate Android Wi-Fi service state internally
+
+This is not a “connect to hotspot” guide.
+
+This is a reproducible wireless lab workflow for inspection and analysis.
+
+---
+
+# 🧰 Requirements
+
+* Kali Linux (or compatible Linux distribution)
+* Wireless interface capable of AP mode
+* NetworkManager
+* ADB installed
+* Android device with USB debugging enabled
+
+---
+
+# 🚀 Step 1 — Create the Lab Access Point
+
+Create the hotspot:
+
+```bash
+nmcli device wifi hotspot ifname wlan0 ssid Lab9 password Password9
+```
+
+NetworkManager automatically:
+
+* Spawns hostapd internally
+* Handles DHCP assignment
+* Manages WPA authentication
+
+Display hotspot details and QR code:
+
+```bash
+nmcli dev wifi show-password
+```
+
+Expected output:
+
+```
+SSID: Lab9
+Security: WPA
+Password: Password9
+```
+
+---
+
+# 📱 Step 2 — Provision Android via ADB
+
+Clone the repository:
+
+```bash
+git clone https://github.com/DouglasFreshHabian/AndroidLab.git
+cd AndroidLab
+```
+
+Make the script executable:
+
+```bash
+chmod +x adb_wifi_provision.sh
+```
+
+Run:
+
+```bash
+./adb_wifi_provision.sh
+```
+
+Provide:
+
+```
+Enter SSID: Lab9
+Security (open|wpa2|wpa3|wep): wpa2
+Password: Password9
+Optional BSSID:
+```
+
+Your Android device will connect using system-level Wi-Fi commands.
+
+---
+
+# 🔎 Step 3 — Prove Layer 2 Association
+
+Strongest proof:
+
+```bash
+iw dev wlan0 station dump
+```
+
+Example:
+
+```
+Station aa:bb:cc:dd:ee:ff (on wlan0)
+    rx bytes:  15240
+    tx bytes:  9321
+    signal:    -38 dBm
+```
+
+This confirms:
+
+* Association
+* Authentication
+* Signal strength
+* Active data exchange
+
+Live monitoring:
+
+```bash
+watch -n 1 "iw dev wlan0 station dump"
+```
+
+Toggle Wi-Fi on Android to see real-time changes.
+
+---
+
+# 🌐 Step 4 — Prove Layer 3 (IP Assignment)
+
+NetworkManager typically assigns from:
+
+```
+10.42.0.0/24
+```
+
+Verify:
+
+```bash
+ip neigh show dev wlan0
+```
+
+Example:
+
+```
+10.42.0.34 lladdr aa:bb:cc:dd:ee:ff REACHABLE
+```
+
+Now you have:
+
+* IP address
+* MAC address
+* Interface confirmation
+
+---
+
+# 📡 Step 5 — Observe Live Traffic
+
+Start packet capture:
+
+```bash
+sudo tcpdump -i wlan0
+```
+
+Or filter DNS traffic:
+
+```bash
+sudo tcpdump -i wlan0 port 53
+```
+
+On Android:
+
+```bash
+adb shell ping google.com
+```
+
+You will see DNS resolution and ICMP traffic in real time.
+
+This confirms:
+
+* Active transmission
+* Routing functionality
+* End-to-end connectivity
+
+---
+
+# 🦈 Step 6 — Visual Packet Analysis (Wireshark)
+
+Launch:
+
+```bash
+sudo wireshark
+```
+
+Select:
+
+* `any`
+* or `wlan0`
+
+Useful filters:
+
+```
+dns
+icmp
+arp
+```
+
+Generate traffic on Android to inspect:
+
+* DNS queries
+* ARP resolution
+* ICMP echo requests
+
+---
+
+# 🤖 Step 7 — Confirm Android Internal State
+
+From Linux:
+
+```bash
+adb shell cmd wifi status
+adb shell ip address show wlan0
+```
+
+Optional deeper inspection:
+
+```bash
+adb shell dumpsys wifi
+```
+
+This allows you to correlate:
+
+* BSSID
+* RSSI
+* Link speed
+* Network ID
+
+Now you have:
+
+* Linux perspective
+* Android perspective
+* Packet-level visibility
+
+---
+
+# 🧱 Architecture Overview
+
+```
+[ Android Device ]
+        |
+     802.11
+        |
+[ Kali Hotspot (wlan0) ]
+        |
+     NAT / Routing
+        |
+     Internet
+```
+
+Validation layers:
+
+* Layer 2 → Association (`iw`)
+* Layer 3 → DHCP / ARP (`ip neigh`)
+* Layer 4 → ICMP / DNS (`tcpdump`)
+* Application → Browser traffic
+* Android Internal → `cmd wifi`, `dumpsys wifi`
+
+---
+
+# 🛑 Teardown
+
+Bring hotspot down:
+
+```bash
+nmcli connection down Hotspot
+```
+
+---
+
+# ⚠️ Disclaimer
+
+This project is intended for:
+
+* Personal lab environments
+* Controlled testing
+* Educational research
+
+Do not deploy rogue access points on networks you do not own or explicitly control.
+
+---
