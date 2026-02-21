@@ -1,10 +1,5 @@
 # 📡 AndroidLab
 
-<p align="left">
-  <img src="https://github.com/DouglasFreshHabian/AndroidLab/blob/main/.github/Assets/qr.png" width="280"><br><br>
-  <span style="font-size: 16px;">Scan to instantly watch the Video</span>
-</p>
-
 Build a controlled rogue Wi-Fi lab on Kali Linux, force an Android device to connect using ADB, and verify the connection at every OSI layer — from wireless association to live packet flow.
 
 No root.
@@ -300,3 +295,15 @@ This project is intended for:
 Do not deploy rogue access points on networks you do not own or explicitly control.
 
 ---
+
+<!-- 
+    Fresh Forensics, LLC | Douglas Fresh Habian | 2025
+    github.com/DouglasFreshHabian
+    freshforensicsllc@tuta.com
+-->
+
+
+<p align="left">
+  <img src="https://github.com/DouglasFreshHabian/AndroidLab/blob/main/.github/Assets/qr.png" width="280"><br><br>
+  <span style="font-size: 16px;">Scan to instantly watch the Video</span>
+</p>
