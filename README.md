@@ -1,4 +1,7 @@
 # 📡 AndroidLab
+<p align="center">
+  <img src="https://github.com/DouglasFreshHabian/AndroidLab/blob/main/.github/Assets/qr.png" width="280">
+</p>
 
 Build a controlled rogue Wi-Fi lab on Kali Linux, force an Android device to connect using ADB, and verify the connection at every OSI layer — from wireless association to live packet flow.
 
