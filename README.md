@@ -178,7 +178,7 @@ sudo tcpdump -i wlan0 port 53
 On Android:
 
 ```bash
-adb shell ping google.com
+adb shell ping 8.8.8.8
 ```
 
 You will see DNS resolution and ICMP traffic in real time.
