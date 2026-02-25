@@ -47,7 +47,7 @@ No manual `nmcli` commands required.
 
 ---
 
-## 📦 Clone the Repository
+Clone the Repository
 
 ```bash
 git clone https://github.com/DouglasFreshHabian/AndroidLab.git
@@ -56,7 +56,7 @@ cd AndroidLab
 
 ---
 
-## 🔧 Make the Script Executable
+Make the Script Executable
 
 ```bash
 chmod +x adb_wifi_provision.sh
@@ -64,7 +64,7 @@ chmod +x adb_wifi_provision.sh
 
 ---
 
-## ▶ Run the Automation Script
+Run the Automation Script
 
 ```bash
 ./adb_wifi_provision.sh
