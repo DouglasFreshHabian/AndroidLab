@@ -35,27 +35,58 @@ This is a reproducible wireless lab workflow for inspection and analysis.
 
 ---
 
-# 🚀 Step 1 — Create the Lab Access Point
+# 🚀 Automated Lab Wi-Fi + Android Provisioning
 
-Create the hotspot:
+The `adb_wifi_provision.sh` script now:
+
+* ✅ Creates the lab hotspot using NetworkManager
+* ✅ Displays hotspot credentials
+* ✅ Provisions the connected Android device via ADB
+
+No manual `nmcli` commands required.
+
+---
+
+## 📦 Clone the Repository
 
 ```bash
-nmcli device wifi hotspot ifname wlan0 ssid Lab9 password Password9
+git clone https://github.com/DouglasFreshHabian/AndroidLab.git
+cd AndroidLab
+```
+
+---
+
+## 🔧 Make the Script Executable
+
+```bash
+chmod +x adb_wifi_provision.sh
+```
+
+---
+
+## ▶ Run the Automation Script
+
+```bash
+./adb_wifi_provision.sh
+```
+
+---
+
+# 🚀 Step 1 — Creates the Lab Access Point
+
+The script automatically runs:
+
+```bash
+nmcli device wifi hotspot ifname wlan0 ssid <SSID> password <PASSWORD>
 ```
 
 NetworkManager automatically:
 
-* Spawns hostapd internally
-* Handles DHCP assignment
+* Spawns `hostapd` internally
+* Configures DHCP
 * Manages WPA authentication
 
-Display hotspot details and QR code:
-
-```bash
-nmcli dev wifi show-password
-```
-
-Expected output:
+You will see output similar to:
 
 ```
 SSID: Lab9
@@ -65,37 +96,22 @@ Password: Password9
 
 ---
 
-# 📱 Step 2 — Provision Android via ADB
+# 📱 Step 2 — Provisions Android via ADB
 
-Clone the repository:
+The script then:
 
-```bash
-git clone https://github.com/DouglasFreshHabian/AndroidLab.git
-cd AndroidLab
-```
+* Prompts for SSID
+* Prompts for password
+* Pushes configuration using system-level Android Wi-Fi commands via ADB
 
-Make the script executable:
-
-```bash
-chmod +x adb_wifi_provision.sh
-```
-
-Run:
-
-```bash
-./adb_wifi_provision.sh
-```
-
-Provide:
+Example prompt:
 
 ```
 Enter SSID: Lab9
-Security (open|wpa2|wpa3|wep): wpa2
 Password: Password9
-Optional BSSID:
 ```
 
-Your Android device will connect using system-level Wi-Fi commands.
+Your Android device will automatically connect to the newly created lab access point.
 
 ---
 
@@ -281,7 +297,11 @@ Bring hotspot down:
 ```bash
 nmcli connection down Hotspot
 ```
+Delete hotspot:
 
+```bash
+nmcli connection delete Hotspot
+```
 ---
 
 # ⚠️ Disclaimer
